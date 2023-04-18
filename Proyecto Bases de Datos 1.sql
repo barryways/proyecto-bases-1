@@ -31,7 +31,7 @@ CREATE TABLE Usuario(
 	Correo varchar(100) NOT NULL,
 	Clave varchar(100) NOT NULL,
 	Fecha_Ingreso datetime DEFAULT GETDATE(),
-	ID_Nacionalidad int foreign key references Nacionalidad(ID_Nacionalidad) NOT NULL
+	ID_Nacionalidad int foreign key references Nacionalidad(ID_Nacionalidad) NOT NULL,
 
 	CONSTRAINT CK_ValidarEdad CHECK (DATEDIFF(YEAR, Fecha_Nacimiento, GETDATE()) >= 13),
 	CONSTRAINT CK_ValidarClave CHECK (clave >=8)
@@ -42,6 +42,30 @@ CREATE TABLE Registro_Usuario(
 	Tiempo_Inicio datetime default getdate(),
 	Tiempo_Final datetime null
 );
+--Cosmeticos
+CREATE TABLE Cosmetico (
+   ID_Cosmetico int primary key identity(1,1),
+   Precio MONEY,
+   Nombre Varchar(50) not null,
+   CONSTRAINT CK_PrecioSkin_Positive CHECK (Precio >= 0),
+   ID_Usuario int foreign key references Usuario(ID_Usuario) NOT NULL
+)
+
+CREATE TABLE Categoria (
+	ID_Categoria  int primary key identity(1,1),
+	Nombre Varchar(50) not null,
+	ID_Comestico int foreign key references Cosmetico(ID_Cosmetico) NOT NULL
+)
+
+CREATE TABLE Tipo(
+	ID_Tipo int primary key identity(1,1),
+	Nombre Varchar(50) not null,
+	ID_Comestico int foreign key references Cosmetico(ID_Cosmetico) NOT NULL
+)
+
+--Faltan Estadisticas de cosmeticos --
+
+--Fin Cosmeticos --
 
 --SCRIPTS DE MANIPULACION E INCERSION DE DATOS (DML)
 
