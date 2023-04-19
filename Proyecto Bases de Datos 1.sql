@@ -22,6 +22,7 @@ CREATE TABLE Nacionalidad(
 );
 CREATE TABLE Usuario(
 	ID_Usuario int primary key identity(1,1),
+	Nickname varchar(50) unique,
 	Nombre_1 varchar(50) NOT NULL,
 	Nombre_2 varchar(50) NULL,
 	Nombre_3 varchar(50) NULL,
@@ -32,7 +33,8 @@ CREATE TABLE Usuario(
 	Clave varchar(100) NOT NULL,
 	Fecha_Ingreso datetime DEFAULT GETDATE(),
 	ID_Nacionalidad int foreign key references Nacionalidad(ID_Nacionalidad) NOT NULL,
-
+	Ultimo_Cambio Date,
+	CONSTRAINT Nickname check (DATEDIFF(MONTH,GETDATE(),Ultimo_Cambio) >= 3 OR Ultimo_Cambio is null),
 	CONSTRAINT CK_ValidarEdad CHECK (DATEDIFF(YEAR, Fecha_Nacimiento, GETDATE()) >= 13),
 	CONSTRAINT CK_ValidarClave CHECK (clave >=8)
 );
