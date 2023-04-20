@@ -102,8 +102,14 @@ CREATE TABLE Partida (
 
 CREATE TABLE Historial_Partida (
 	ID_Historial_Partida int primary key identity(1,1),
-	ID_Partida int foreign key references Partida(ID_Partida) NOT NULL
+	Resultado BIT NOT NULL,
+	ID_Partida int foreign key references Partida(ID_Partida) NOT NULL,
+	ID_Usuario int foreign key references Usuario(ID_Usuario) NOT NULL,
+	 
+	
 )
+
+
 
 --SCRIPTS DE MANIPULACION E INCERSION DE DATOS (DML)
 
