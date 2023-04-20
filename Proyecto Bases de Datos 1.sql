@@ -56,18 +56,54 @@ CREATE TABLE Cosmetico (
 CREATE TABLE Categoria (
 	ID_Categoria  int primary key identity(1,1),
 	Nombre Varchar(50) not null,
-	ID_Comestico int foreign key references Cosmetico(ID_Cosmetico) NOT NULL
+	ID_Cosmetico int foreign key references Cosmetico(ID_Cosmetico) NOT NULL
 )
 
 CREATE TABLE Tipo(
 	ID_Tipo int primary key identity(1,1),
 	Nombre Varchar(50) not null,
-	ID_Comestico int foreign key references Cosmetico(ID_Cosmetico) NOT NULL
+	ID_Cosmetico int foreign key references Cosmetico(ID_Cosmetico) NOT NULL
 )
 
---Faltan Estadisticas de cosmeticos --
-
 --Fin Cosmeticos --
+
+--Partidas--
+
+
+
+CREATE TABLE Tiempo_Partida (
+	ID_Tiempo_Partida int primary key identity(1,1),
+	Duracion TIME NOT NULL,
+	
+)
+
+CREATE TABLE Velocidad (
+	ID_Velocidad int primary key identity(1,1),
+	Velocidad int NOT NULL,
+	Distancia_Inicial int NOT NULL,
+	Distancia_Final int NOT NULL
+)
+
+CREATE TABLE Tipo_Partida (
+	ID_Tipo_Partida int primary key identity(1,1), 
+	Nombre varchar(50) NOT NULL,
+	ID_Velocidad int foreign key references Velocidad(ID_Velocidad) NOT NULL,
+	ID_Tiempo_Partida int foreign key references Tiempo_Partida(ID_Tiempo_Partida) NOT NULL
+	
+)
+
+CREATE TABLE Partida (
+	ID_Partida int primary key identity(1,1), 
+	Fecha_Inicio DATETIME DEFAULT GETDATE() NOT NULL,
+	Fecha_Fin DATETIME NOT NULL,
+	ID_Tipo_Partida int foreign key references Tipo_Partida(ID_Tipo_Partida) NOT NULL
+
+)
+
+CREATE TABLE Historial_Partida (
+	ID_Historial_Partida int primary key identity(1,1),
+	ID_Partida int foreign key references Partida(ID_Partida) NOT NULL
+)
 
 --SCRIPTS DE MANIPULACION E INCERSION DE DATOS (DML)
 
