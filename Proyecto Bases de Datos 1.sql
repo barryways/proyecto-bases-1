@@ -45,25 +45,29 @@ CREATE TABLE Registro_Usuario(
 	Tiempo_Final datetime null
 );
 --Cosmeticos
+CREATE TABLE Categoria (
+	ID_Categoria  int primary key identity(1,1),
+	Nombre Varchar(50) not null,
+)
+CREATE TABLE Tipo(
+	ID_Tipo int primary key identity(1,1),
+	Nombre Varchar(50) not null
+)
 CREATE TABLE Cosmetico (
    ID_Cosmetico int primary key identity(1,1),
    Precio MONEY,
    Nombre Varchar(50) not null,
+   ID_Categoria int foreign key references Categoria(ID_Categoria) NOT NULL,
+   ID_Tipo int foreign key references Tipo(ID_Tipo) NOT NULL,
    CONSTRAINT CK_PrecioSkin_Positive CHECK (Precio >= 0),
    ID_Usuario int foreign key references Usuario(ID_Usuario) NOT NULL
 )
-
-CREATE TABLE Categoria (
-	ID_Categoria  int primary key identity(1,1),
-	Nombre Varchar(50) not null,
-	ID_Cosmetico int foreign key references Cosmetico(ID_Cosmetico) NOT NULL
+CREATE TABLE Cosmetico_Usuario(
+	ID_Cosmetico_Usuario int primary key identity(1,1),
+	ID_Cosmetico int foreign key references Cosmetico(ID_Cosmetico) NOT NULL,
+	ID_Usuario int foreign key references Usuario(ID_Usuario) NOT NULL
 )
 
-CREATE TABLE Tipo(
-	ID_Tipo int primary key identity(1,1),
-	Nombre Varchar(50) not null,
-	ID_Cosmetico int foreign key references Cosmetico(ID_Cosmetico) NOT NULL
-)
 
 --Fin Cosmeticos --
 
@@ -74,7 +78,6 @@ CREATE TABLE Tipo(
 CREATE TABLE Tiempo_Partida (
 	ID_Tiempo_Partida int primary key identity(1,1),
 	Duracion TIME NOT NULL,
-	
 )
 
 CREATE TABLE Velocidad (
@@ -102,13 +105,18 @@ CREATE TABLE Partida (
 
 CREATE TABLE Historial_Partida (
 	ID_Historial_Partida int primary key identity(1,1),
-	Resultado BIT NOT NULL,
+	Kills int not null default 0,
+	Deaths int not null default 0,
+	Partida_Ganada BIT NOT NULL,
 	ID_Partida int foreign key references Partida(ID_Partida) NOT NULL,
 	ID_Usuario int foreign key references Usuario(ID_Usuario) NOT NULL,
-	 
 	
 )
-
+CREATE TABLE Historial_Cosmetico(
+	ID_Historial_Cosmetico int primary key identity(1,1),
+	ID_Historial_Partida int foreign key references Historial_Partida(ID_Historial_Partida) NOT NULL,
+	ID_Cosmetico int foreign key references Cosmetico(ID_Cosmetico)
+)
 
 
 --SCRIPTS DE MANIPULACION E INCERSION DE DATOS (DML)
