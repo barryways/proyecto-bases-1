@@ -13,12 +13,12 @@ CREATE TABLE Continente(
 );
 CREATE TABLE Pais(
 	ID_Pais int primary key identity(1,1),
-	Nombre varchar(100) NOT NULL,
-	ID_Continente int foreign key references Continente(ID_Continente)
+	Nombre varchar(100) NOT NULL
 );
 CREATE TABLE Nacionalidad(
 	ID_Nacionalidad int primary key identity(1,1),
-	ID_Pais int foreign key references Pais(ID_Pais) NOT NULL
+	ID_Pais int foreign key references Pais(ID_Pais) NOT NULL,
+	ID_Continente int foreign key references Continente(ID_Continente) NOT NULL
 );
 CREATE TABLE Usuario(
 	ID_Usuario int primary key identity(1,1),
@@ -59,8 +59,7 @@ CREATE TABLE Cosmetico (
    Nombre Varchar(50) not null,
    ID_Categoria int foreign key references Categoria(ID_Categoria) NOT NULL,
    ID_Tipo int foreign key references Tipo(ID_Tipo) NOT NULL,
-   CONSTRAINT CK_PrecioSkin_Positive CHECK (Precio >= 0),
-   ID_Usuario int foreign key references Usuario(ID_Usuario) NOT NULL
+   CONSTRAINT CK_PrecioSkin_Positive CHECK (Precio >= 0)
 )
 CREATE TABLE Cosmetico_Usuario(
 	ID_Cosmetico_Usuario int primary key identity(1,1),
@@ -121,6 +120,12 @@ CREATE TABLE Historial_Cosmetico(
 
 --SCRIPTS DE MANIPULACION E INCERSION DE DATOS (DML)
 
+select* from dbo.nacionalidad;
+select * from dbo.continente
+select * from dbo.pais
+select * from dbo.velocidad;
+select * from dbo.tipo_partida;
+select * from dbo.tiempo_partida;
 
 
 
@@ -134,35 +139,128 @@ VALUES ('América'),
        ('Oceanía');
 
 -- Insertar datos en la tabla Pais
-INSERT INTO Pais (Nombre, ID_Continente)
-VALUES ('Estados Unidos', 1),
-       ('Canadá', 1),
-       ('México', 1),
-       ('España', 2),
-       ('Francia', 2),
-       ('Italia', 2),
-       ('China', 3),
-       ('Japón', 3),
-       ('India', 3),
-       ('Nigeria', 4),
-       ('Sudáfrica', 4),
-       ('Egipto', 4),
-       ('Australia', 5),
-       ('Nueva Zelanda', 5);
+INSERT INTO Pais (Nombre)
+VALUES ('Estados Unidos'),
+       ('Canadá'),
+       ('México'),
+       ('España'),
+       ('Francia'),
+       ('Italia'),
+       ('China'),
+       ('Japón'),
+       ('India'),
+       ('Nigeria'),
+       ('Sudáfrica'),
+       ('Egipto'),
+       ('Australia'),
+	   ('Nueva Zelanda'),
+       ('Guatemala'),
+	   ('Cuba'),
+	   ('Ghana'),
+	   ('Senegal'),
+	   ('Guinea'),
+	   ('Marruecos'),
+	   ('Alemania'),
+	   ('Portugal'),
+	   ('Suecia'),
+	   ('Noruega'),
+	   ('Eslovenia'),
+	   ('Irak'),
+	   ('Israel'),
+	   ('Palestina'),
+	   ('Samoa');
 
 -- Insertar datos en la tabla Nacionalidad
-INSERT INTO Nacionalidad (ID_Pais)
-VALUES (1),
-       (1),
-       (1),
-       (4),
-       (4),
-       (4),
-       (7),
-       (7),
-       (7),
-       (10),
-       (10),
-       (10),
-       (13),
-       (13);
+INSERT INTO Nacionalidad (ID_Pais, ID_Continente)
+VALUES (1, 1),
+       (2, 1),
+       (3, 1),
+       (4, 2),
+       (5, 2),
+       (6, 2),
+       (7, 3),
+       (8, 3),
+       (9, 3),
+       (10, 4),
+       (11, 4),
+       (12, 4),
+       (13, 5),
+       (14, 5),
+	   (15,1),
+	   (16,1),
+	   (17,4),
+	   (18,4),
+	   (19,4),
+	   (20,4),
+	   (21,2),
+	   (22,2),
+	   (23,2),
+	   (24,2),
+	   (25,2),
+	   (26,3),
+	   (27,3),
+	   (28,3),
+	   (29,5);
+--insercion de tiempo de la partida
+INSERT INTO Tiempo_Partida (Duracion)
+VALUES ('00:10:00'),
+	('00:20:00');
+--insercion de velocida
+INSERT INTO velocidad 
+VALUES (36,10,1), 
+	(45,10,1), 
+	(60,10,0);
+--insercion de tipo partida
+INSERT INTO Tipo_partida 
+VALUES('Normal',1,2),
+	('Fast',2,1),
+	('Killer',3,1);
+--insercion de categoria de categoria
+INSERT INTO Categoria 
+VALUES
+	('Común'),
+	('Raro'),
+	('Legendario');
+INSERT INTO Tipo
+VALUES ('Personaje'),
+	('Arma'),
+	('Mochila'),
+	('Paracaidas');
+
+
+INSERT INTO Cosmetico (Precio, Nombre, ID_Categoria, ID_Tipo)
+VALUES (100.0, 'Dragon Lore', 3,2),
+	(20.0, 'Llamarada de Oxido', 3,2),
+	(5.0, 'Mochila Magica', 2,3),
+	(0.0, 'Mochila de Aventura', 1,3),
+	(4.50, 'Traje Hiperlunar', 2,1),
+	(20.0, 'Traje Tony Stark', 3,1),
+	(0.0, 'Sombrilla Verde', 1,4),
+	(1.50, 'Sombrilla Dorada', 2,4),
+	(25.0, 'Globo Aeroestatico', 3,4),
+	(20.0, 'Manta del Comedor', 3,4),
+	(1.0, 'Traje Hyoerbeast', 1,1),
+	(10.0, 'Traje Nave Orbital', 2,1),
+	(50.0, 'Traje Bandido', 3,1),
+	(0.0, 'Sniper Leak', 1,2),
+	(0.0, 'Mustang & Sally', 2,2),
+	(35.0, 'El Cañon de la Bestia', 3,2),
+	(0.0, 'Mochila de Carreras', 1,3),
+	(6.0, 'Mochila de Repartidor de Glovo', 2,3),
+	(22.50, 'Maceta', 3,3),
+	(0.0, 'Bandera Municipal', 1,4);
+
+
+
+--Querys de prueba de datos para analisis del equipo
+--Selecciona los distintos tipos de partida
+select tp.Nombre, v.Velocidad, v.Distancia_Inicial, v.Distancia_final, tip.Duracion from tipo_partida tp inner join velocidad v on (tp.ID_velocidad =v.ID_velocidad)
+INNER JOIN Tiempo_partida tip on (tp.ID_tiempo_partida = tip.ID_Tiempo_partida)
+--Selecciona las diferentes nacionalidades
+SELECT ID_Nacionalidad, p.Nombre, c.Nombre FROM dbo.nacionalidad n INNER JOIN Pais p on (n.ID_Pais=p.ID_Pais) inner join Continente c on (n.ID_Continente= c.ID_Continente)
+--Selecciona los cosmeticos actuales (20)
+	select c.ID_Cosmetico, c.Precio, c.Nombre, ct.Nombre, t.Nombre from cosmetico c 
+	inner join Categoria ct on(c.ID_Categoria = ct.ID_Categoria) 
+	inner join Tipo t on(c.ID_Tipo = t.ID_Tipo)
+
+
