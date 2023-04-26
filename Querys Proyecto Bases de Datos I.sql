@@ -47,6 +47,13 @@ GROUP BY P.Nombre
 --------------------------------------------------------------------------------
 --10. Cantidad de partidas en las cuales ha habido al menos un jugador de Asia y uno de 
 --América y que uno de estos haya ganado la partida
+Select count(DISTINCT hp.ID_Partida) AS Cantidad_Partida from Historial_Partida hp
+inner join Usuario as us on(us.ID_Usuario = hp.ID_Usuario)
+inner join Nacionalidad as na on(na.ID_Nacionalidad = us.ID_Nacionalidad)
+inner join Continente as con on(con.ID_Continente=na.ID_Continente)
+where Partida_Ganada =1 
+and con.ID_Continente= 3
+
 --------------------------------------------------------------------------------
 --11. Cantidad de partidas en las que el ganador tenga 0 kills y algún jugador tenga 10 o 
 --más kills
@@ -92,6 +99,15 @@ ORDER BY t.Nombre, ca.Nombre, COUNT(hp.ID_Historial_Partida) DESC;
 ----------------------------------------------------------------------------------
 --• Utilización efectiva de un cosmético: cantidad de usuarios que lo han utilizado en 
 --una partida / cantidad de usuarios que lo han comprado
+SELECT cosm.Nombre, COUNT(*) AS CantidadUsuario,
+  COUNT(*) / (SELECT COUNT(*) FROM Cosmetico_Usuario WHERE ID_Cosmetico = cosm.ID_Cosmetico) AS UtilizacionEfectiva
+FROM Historial_Cosmetico hcosm
+INNER JOIN Historial_Partida hp ON hp.ID_Historial_Partida = hcosm.ID_Historial_Partida
+INNER JOIN Cosmetico cosm ON cosm.ID_Cosmetico = hcosm.ID_Cosmetico
+GROUP BY cosm.ID_Cosmetico, cosm.Nombre;
+
+
+
 ----------------------------------------------------------------------------------
 --• Win ratio: cantidad de partidas ganadas / cantidad de partidas totales
 --------------------------------------------------------------------------------
