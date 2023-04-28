@@ -36,11 +36,8 @@ CREATE TABLE Usuario(
 	Ultimo_Cambio Date,
 	CONSTRAINT Nickname check (DATEDIFF(MONTH,GETDATE(),Ultimo_Cambio) >= 3 OR Ultimo_Cambio is null),
 	CONSTRAINT CK_ValidarEdad CHECK (DATEDIFF(YEAR, Fecha_Nacimiento, GETDATE()) >= 13),
-	CONSTRAINT CK_ValidarClave CHECK (clave >=8)
+	CONSTRAINT CK_ValidarClave CHECK (len(clave) >=8)
 );
---botar la siguiente constraint, tiene conflicto para meter datos
-ALTER TABLE dbo.Usuario DROP CONSTRAINT Nickname;
-alter table dbo.Usuario drop constraint CK_ValidarClave
 
 CREATE TABLE Registro_Usuario(
 	ID_RegistroUsuario int primary key identity(1,1),
@@ -70,13 +67,6 @@ CREATE TABLE Cosmetico_Usuario(
 	ID_Cosmetico int foreign key references Cosmetico(ID_Cosmetico) NOT NULL,
 	ID_Usuario int foreign key references Usuario(ID_Usuario) NOT NULL
 )
-
-
---Fin Cosmeticos --
-
---Partidas--
-
-
 
 CREATE TABLE Tiempo_Partida (
 	ID_Tiempo_Partida int primary key identity(1,1),
@@ -253,36 +243,3 @@ VALUES (100.0, 'Dragon Lore', 3,2),
 	(6.0, 'Mochila de Repartidor de Glovo', 2,3),
 	(22.50, 'Maceta', 3,3),
 	(0.0, 'Bandera Municipal', 1,4);
-
-
-
---Querys de prueba de datos para analisis del equipo
---Selecciona los distintos tipos de partida
-select tp.Nombre, v.Velocidad, v.Distancia_Inicial, v.Distancia_final, tip.Duracion from tipo_partida tp inner join velocidad v on (tp.ID_velocidad =v.ID_velocidad)
-INNER JOIN Tiempo_partida tip on (tp.ID_tiempo_partida = tip.ID_Tiempo_partida)
---Selecciona las diferentes nacionalidades
-SELECT ID_Nacionalidad, p.Nombre, c.Nombre FROM dbo.nacionalidad n INNER JOIN Pais p on (n.ID_Pais=p.ID_Pais) inner join Continente c on (n.ID_Continente= c.ID_Continente)
---Selecciona los cosmeticos actuales (20)
-	select c.ID_Cosmetico, c.Precio, c.Nombre, ct.Nombre, t.Nombre from cosmetico c 
-	inner join Categoria ct on(c.ID_Categoria = ct.ID_Categoria) 
-	inner join Tipo t on(c.ID_Tipo = t.ID_Tipo)
---Cambiar el estado de partidas ganadas
-UPDATE Historial_Partida
-SET Partida_Ganada = CASE
-    WHEN Deaths = 1 THEN 0
-    WHEN Deaths = 0 THEN 1
-    ELSE Partida_Ganada
-END;
-UPDATE Partida
-SET fecha_fin = DATEADD(MINUTE, -10, fecha_fin)
-WHERE ID_Tipo_Partida = 2 OR ID_Tipo_Partida = 3;
-
-
-select * from Historial_Partida
-select * from partida
-select * from dbo.usuario
-
-
-delete from historial_cosmetico
-delete from historial_partida
-delete from partida
