@@ -243,3 +243,10 @@ VALUES (100.0, 'Dragon Lore', 3,2),
 	(6.0, 'Mochila de Repartidor de Glovo', 2,3),
 	(22.50, 'Maceta', 3,3),
 	(0.0, 'Bandera Municipal', 1,4);
+
+
+--
+UPDATE Partida
+SET Fecha_fin = DATEADD(minute, 10, Fecha_fin)
+WHERE ID_Tipo_Partida IN (2, 3) AND Fecha_inicio = Fecha_fin;
+--

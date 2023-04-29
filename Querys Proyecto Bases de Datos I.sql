@@ -102,6 +102,25 @@ GROUP BY hp.ID_Partida, Kills, u.Nickname
 --8. Listado de jugadores rivales y grado de rivalidad: se define que dos jugadores son 
 --rivales si han participado en una misma partida 5 o m�s veces y el grado de rivalidad 
 --es la cantidad de partidas que han jugado juntos
+SELECT j1.Nickname AS Jugador1, j2.Nickname AS Jugador2, COUNT(*) AS Grado_Rivalidad
+FROM Historial_Partida hp1
+INNER JOIN Historial_Partida hp2 ON hp1.ID_Partida = hp2.ID_Partida AND hp1.ID_Usuario < hp2.ID_Usuario
+INNER JOIN Usuario j1 ON hp1.ID_Usuario = j1.ID_Usuario
+INNER JOIN Usuario j2 ON hp2.ID_Usuario = j2.ID_Usuario
+group by J1.Nickname, J2.Nickname
+HAVING COUNT(*) >= 5;
+
+
+--- PRUEBA DE ESTE QUERY PARA DENOTAR QUE Si funciona
+SELECT u1.Nickname AS Jugador1, u2.Nickname AS Jugador2, COUNT(*) AS Cantidad_Partidas_Juntos
+FROM Historial_Partida AS h1
+INNER JOIN Historial_Partida AS h2 ON h1.ID_Partida = h2.ID_Partida AND h1.ID_Usuario <> h2.ID_Usuario
+INNER JOIN Usuario AS u1 ON h1.ID_Usuario = u1.ID_Usuario
+INNER JOIN Usuario AS u2 ON h2.ID_Usuario = u2.ID_Usuario
+where u1.Nickname = 'William184'
+GROUP BY u1.Nickname, u2.Nickname
+HAVING COUNT(*) >1
+
 
 
 --------------------------------------------------------------------------------
@@ -171,6 +190,15 @@ ORDER BY t.Nombre, ca.Nombre, COUNT(hp.ID_Historial_Partida) DESC;
 ----------------------------------------------------------------------------------
 --� Tiempo efectivo de juego: cantidad de tiempo en partida / cantidad de tiempo en la 
 --plataforma
+
+SELECT SUM(DATEDIFF(MINUTE, pa.Fecha_Inicio, pa.Fecha_Fin))*10 / 
+       SUM(DATEDIFF(MINUTE, R.Tiempo_Inicio, R.Tiempo_Final)) AS Tiempo_Efectivo_de_Juego
+FROM Historial_Partida hp
+INNER JOIN Partida pa ON hp.ID_Partida = pa.ID_Partida
+INNER JOIN Registro_Usuario R ON hp.ID_Usuario = r.ID_Usuario
+
+
+
 ----------------------------------------------------------------------------------
 --� Utilizaci�n efectiva de un cosm�tico: cantidad de usuarios que lo han utilizado en 
 --una partida / cantidad de usuarios que lo han comprado
