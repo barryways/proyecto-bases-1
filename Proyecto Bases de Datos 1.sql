@@ -39,6 +39,7 @@ CREATE TABLE Usuario(
 	CONSTRAINT CK_ValidarClave CHECK (len(clave) >=8)
 );
 
+
 CREATE TABLE Registro_Usuario(
 	ID_RegistroUsuario int primary key identity(1,1),
 	ID_Usuario int foreign key references Usuario(ID_Usuario) NOT NULL,
