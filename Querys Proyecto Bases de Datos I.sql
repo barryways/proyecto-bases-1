@@ -178,15 +178,54 @@ ORDER BY t.Nombre, ca.Nombre, COUNT(hp.ID_Historial_Partida) DESC;
 
 --------------------------------------------------------------------------------
 --13. Cantidad de partidas por tiempo de duraci�n en minutos
+SELECT tmp.Duracion, COUNT(*) AS CantidadPartidas
+FROM Partida p
+INNER JOIN Tipo_Partida tp ON (p.ID_Tipo_Partida = tp.ID_Tipo_Partida)
+INNER JOIN Tiempo_Partida tmp ON (tp.ID_Tiempo_Partida = tmp.ID_Tiempo_Partida)
+GROUP BY tmp.Duracion
+
 ----------------------------------------------------------------------------------
 --14. Top 10 jugadores con m�s tiempo de juego
 ----------------------------------------------------------------------------------
 --15. Ranking de jugadores seg�n su K/D por rango de edad (13 a 15, 16 a 20, 21 a 25, 
 --26 a 30 y mayores de 30)
+SELECT 
+  CASE 
+    WHEN (DATEDIFF(DAY, GETDATE(), u.Fecha_Nacimiento)) BETWEEN 13 AND 15 THEN '13-15'
+    WHEN (DATEDIFF(DAY, GETDATE(), u.Fecha_Nacimiento)) BETWEEN 16 AND 20 THEN '16-20'
+    WHEN (DATEDIFF(DAY, GETDATE(), u.Fecha_Nacimiento)) BETWEEN 21 AND 25 THEN '21-25'
+    WHEN (DATEDIFF(DAY, GETDATE(), u.Fecha_Nacimiento)) BETWEEN 26 AND 30 THEN '26-30'
+    ELSE 'Mayor de 30'
+  END AS RangoEdad,
+  u.ID_Usuario,
+  COUNT(*) AS Kills
+FROM 
+  Usuario u
+  INNER JOIN Historial_Partida hsp ON (u.ID_Usuario = hsp.ID_Usuario)
+WHERE 
+  hsp.Partida_Ganada = 1
+GROUP BY 
+  CASE 
+    WHEN (DATEDIFF(DAY, GETDATE(), u.Fecha_Nacimiento)) BETWEEN 13 AND 15 THEN '13-15'
+    WHEN (DATEDIFF(DAY, GETDATE(), u.Fecha_Nacimiento)) BETWEEN 16 AND 20 THEN '16-20'
+    WHEN (DATEDIFF(DAY, GETDATE(), u.Fecha_Nacimiento)) BETWEEN 21 AND 25 THEN '21-25'
+    WHEN (DATEDIFF(DAY, GETDATE(), u.Fecha_Nacimiento)) BETWEEN 26 AND 30 THEN '26-30'
+    ELSE 'Mayor de 30'
+  END, U.ID_Usuario
+ORDER BY 
+  RangoEdad ASC,
+  Kills DESC
+
 --------------------------------------------------------------------------------
 --KPI--
 
 --� K/D de un jugador: kills/deaths
+SELECT hp.ID_Usuario, hp.Kills
+FROM Historial_Partida hp
+WHERE hp.ID_Usuario = ID_Usuario AND Kills > 1
+GROUP BY hp.ID_Usuario, hp.Kills
+ORDER BY hp.ID_Usuario ASC
+
 ----------------------------------------------------------------------------------
 --� Tiempo efectivo de juego: cantidad de tiempo en partida / cantidad de tiempo en la 
 --plataforma
@@ -213,4 +252,14 @@ GROUP BY cosm.ID_Cosmetico, cosm.Nombre;
 
 ----------------------------------------------------------------------------------
 --� Win ratio: cantidad de partidas ganadas / cantidad de partidas totales
+SELECT 
+  u.ID_Usuario, COUNT(*) AS PartidasJugadas, 
+  SUM(CASE WHEN hsp.Partida_Ganada = 1 THEN 1 ELSE 0 END) AS PartidasGanadas
+FROM 
+  Usuario u
+  INNER JOIN Historial_Partida hsp on (u.ID_Usuario = hsp.ID_Usuario) 
+WHERE 
+  u.ID_Usuario = u.ID_Usuario
+GROUP BY u.ID_Usuario, COUNT(hsp.ID_Partida),  hsp.Partida_Ganada
+
 --------------------------------------------------------------------------------
