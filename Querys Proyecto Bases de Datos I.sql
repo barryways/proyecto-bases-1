@@ -96,7 +96,7 @@ FROM dbo.Historial_Partida hp
 inner join dbo.Usuario u on (hp.ID_Usuario=u.ID_Usuario)
 WHERE hp.ID_Usuario = 413 AND Partida_Ganada = 1
 GROUP BY hp.ID_Partida, Kills, u.Nickname
-
+order by kills desc
 
 --------------------------------------------------------------------------------
 --8. Listado de jugadores rivales y grado de rivalidad: se define que dos jugadores son 
@@ -254,24 +254,73 @@ SELECT
     WHEN SUM(CASE WHEN Deaths > 0  THEN 1 ELSE 0 END) = 0 THEN NULL 
     ELSE CAST(SUM(CASE WHEN Kills > 0 THEN 1 ELSE 0 END) AS FLOAT) / 
     SUM(CASE WHEN Deaths > 0  THEN 1 ELSE 0 END) 
-  END AS kdratio
+  END AS KD
 FROM dbo.Historial_Partida hp
 INNER JOIN dbo.Usuario u ON hp.ID_Usuario = u.ID_Usuario
 GROUP BY hp.ID_Usuario, u.Nickname
 HAVING COUNT(*) > 3 AND SUM(CASE WHEN Deaths > 0 THEN 1 ELSE 0 END) > 0
-ORDER BY kdratio DESC
+ORDER BY KD DESC
 
 ----------------------------------------------------------------------------------
 --� Tiempo efectivo de juego: cantidad de tiempo en partida / cantidad de tiempo en la 
 --plataforma
 
 SELECT SUM(DATEDIFF(MINUTE, pa.Fecha_Inicio, pa.Fecha_Fin))*10 / 
-       SUM(DATEDIFF(MINUTE, R.Tiempo_Inicio, R.Tiempo_Final)) AS Tiempo_Efectivo_de_Juego
+       SUM(DATEDIFF(MINUTE, R.Tiempo_Inicio, R.Tiempo_Final))  AS Tiempo_Efectivo_de_Juego
 FROM Historial_Partida hp
 INNER JOIN Partida pa ON hp.ID_Partida = pa.ID_Partida
 INNER JOIN Registro_Usuario R ON hp.ID_Usuario = r.ID_Usuario
 
+/*
+select * from Registro_Usuario where Tiempo_Inicio = null
+SELECT CAST(SUM(DATEDIFF(MINUTE, pa.Fecha_Inicio, pa.Fecha_Fin)) AS DECIMAL(18, 2)) * 10 / 
+       CAST(SUM(DATEDIFF(MINUTE, R.Tiempo_Inicio, R.Tiempo_Final)) AS DECIMAL(18, 2)) AS Tiempo_Efectivo_de_Juego
+FROM Historial_Partida hp
+INNER JOIN Partida pa ON hp.ID_Partida = pa.ID_Partida
+INNER JOIN Registro_Usuario R ON hp.ID_Usuario = r.ID_Usuario
 
+SELECT (DATEDIFF(MINUTE, pa.Fecha_Inicio, pa.Fecha_Fin)) as tiempo_tal,
+       (DATEDIFF(MINUTE, R.Tiempo_Inicio, R.Tiempo_Final))  AS Tiempo_Efectivo_de_Juego
+FROM Historial_Partida hp
+INNER JOIN Partida pa ON hp.ID_Partida = pa.ID_Partida
+INNER JOIN Registro_Usuario R ON hp.ID_Usuario = r.ID_Usuario
+where r.ID_Usuario=15
+
+
+select * from Registro_Usuario r
+DELETE FROM Partida
+WHERE Fecha_Fin IS NULL;
+
+
+select SUM(DATEDIFF(MINUTE,R.Tiempo_Inicio,R.Tiempo_Final)) 
+from Historial_Partida hp
+inner join Registro_Usuario R on (hp.ID_Usuario = R.ID_Usuario)
+
+SELECT 
+  SUM(
+    CASE WHEN R.Tiempo_Final IS NULL OR R.Tiempo_Inicio = NULL
+         THEN 0
+         ELSE DATEDIFF(MINUTE,R.Tiempo_Inicio,R.Tiempo_Final)
+    END
+  ) AS Tiempo_Total
+FROM 
+  Historial_Partida hp
+  INNER JOIN Registro_Usuario R ON (hp.ID_Usuario = R.ID_Usuario)
+
+  DELETE FROM Partida
+WHERE Fecha_Fin IS NULL OR Fecha_Inicio IS NULL;
+
+
+select SUM(DATEDIFF(MINUTE, pa.Fecha_Inicio, pa.Fecha_Fin))  from Historial_Partida hp
+INNER JOIN Partida pa ON hp.ID_Partida = pa.ID_Partida
+
+select * from Registro_Usuario
+select 
+select * from Historial_Partida
+
+
+--ARREGHLART
+*/
 
 ----------------------------------------------------------------------------------
 --� Utilizaci�n efectiva de un cosm�tico: cantidad de usuarios que lo han utilizado en 
