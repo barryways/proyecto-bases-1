@@ -96,12 +96,9 @@ FROM dbo.Historial_Partida hp
 inner join dbo.Usuario u on (hp.ID_Usuario=u.ID_Usuario)
 WHERE hp.ID_Usuario = 413 AND Partida_Ganada = 1
 GROUP BY hp.ID_Partida, Kills, u.Nickname
-<<<<<<< HEAD
-order by Kills desc
+ORDER BY Kills DESC
 
-=======
-order by kills desc
->>>>>>> a1f775c72b00e2db41438058c1bac1077d634a75
+
 
 --------------------------------------------------------------------------------
 --8. Listado de jugadores rivales y grado de rivalidad: se define que dos jugadores son 
