@@ -270,79 +270,13 @@ ORDER BY KD DESC
 --� Tiempo efectivo de juego: cantidad de tiempo en partida / cantidad de tiempo en la 
 --plataforma
 
-<<<<<<< HEAD
-SELECT SUM(DATEDIFF(MINUTE, pa.Fecha_Inicio, pa.Fecha_Fin))*100 / 
-       SUM(DATEDIFF(MINUTE, R.Tiempo_Inicio, R.Tiempo_Final)) AS Tiempo_Efectivo_de_Juego
-=======
-SELECT SUM(DATEDIFF(MINUTE, pa.Fecha_Inicio, pa.Fecha_Fin))*10 / 
-       SUM(DATEDIFF(MINUTE, R.Tiempo_Inicio, R.Tiempo_Final))  AS Tiempo_Efectivo_de_Juego
->>>>>>> a1f775c72b00e2db41438058c1bac1077d634a75
+SELECT CAST(SUM(DATEDIFF(MINUTE, pa.Fecha_Inicio, pa.Fecha_Fin))AS FLOAT)*10 /
+       CAST(SUM(DATEDIFF(MINUTE, R.Tiempo_Inicio, R.Tiempo_Final)) AS FLOAT)  AS Tiempo_Efectivo_de_Juego
 FROM Historial_Partida hp
 INNER JOIN Partida pa ON hp.ID_Partida = pa.ID_Partida
 INNER JOIN Registro_Usuario R ON hp.ID_Usuario = r.ID_Usuario
-
-/*
-select * from Registro_Usuario where Tiempo_Inicio = null
-SELECT CAST(SUM(DATEDIFF(MINUTE, pa.Fecha_Inicio, pa.Fecha_Fin)) AS DECIMAL(18, 2)) * 10 / 
-       CAST(SUM(DATEDIFF(MINUTE, R.Tiempo_Inicio, R.Tiempo_Final)) AS DECIMAL(18, 2)) AS Tiempo_Efectivo_de_Juego
-FROM Historial_Partida hp
-INNER JOIN Partida pa ON hp.ID_Partida = pa.ID_Partida
-INNER JOIN Registro_Usuario R ON hp.ID_Usuario = r.ID_Usuario
-
-SELECT (DATEDIFF(MINUTE, pa.Fecha_Inicio, pa.Fecha_Fin)) as tiempo_tal,
-       (DATEDIFF(MINUTE, R.Tiempo_Inicio, R.Tiempo_Final))  AS Tiempo_Efectivo_de_Juego
-FROM Historial_Partida hp
-INNER JOIN Partida pa ON hp.ID_Partida = pa.ID_Partida
-INNER JOIN Registro_Usuario R ON hp.ID_Usuario = r.ID_Usuario
-where r.ID_Usuario=15
-
-
-select * from Registro_Usuario r
-DELETE FROM Partida
-WHERE Fecha_Fin IS NULL;
-
-
-select SUM(DATEDIFF(MINUTE,R.Tiempo_Inicio,R.Tiempo_Final)) 
-from Historial_Partida hp
-inner join Registro_Usuario R on (hp.ID_Usuario = R.ID_Usuario)
-
-SELECT 
-  SUM(
-    CASE WHEN R.Tiempo_Final IS NULL OR R.Tiempo_Inicio = NULL
-         THEN 0
-         ELSE DATEDIFF(MINUTE,R.Tiempo_Inicio,R.Tiempo_Final)
-    END
-  ) AS Tiempo_Total
-FROM 
-  Historial_Partida hp
-  INNER JOIN Registro_Usuario R ON (hp.ID_Usuario = R.ID_Usuario)
-
-  DELETE FROM Partida
-WHERE Fecha_Fin IS NULL OR Fecha_Inicio IS NULL;
-
-
-select SUM(DATEDIFF(MINUTE, pa.Fecha_Inicio, pa.Fecha_Fin))  from Historial_Partida hp
-INNER JOIN Partida pa ON hp.ID_Partida = pa.ID_Partida
-
-select * from Registro_Usuario
-select 
-select * from Historial_Partida
-
-
---ARREGHLART
-*/
-
-select SUM(DATEDIFF(MINUTE, pa.Fecha_Inicio, pa.Fecha_Fin))  from Historial_Partida hp
-INNER JOIN Partida pa ON hp.ID_Partida = pa.ID_Partida
-
-select SUM(DATEDIFF(MINUTE,R.Tiempo_Inicio,R.Tiempo_Final)) from Historial_Partida hp
-inner join Registro_Usuario R on (hp.ID_Usuario = R.ID_Usuario)
-
-SELECT cast(SUM(DATEDIFF(MINUTE, pa.Fecha_Inicio, pa.Fecha_Fin)) as float) / 
-       cast(SUM(DATEDIFF(MINUTE, R.Tiempo_Inicio, R.Tiempo_Final))as float) AS Tiempo_Efectivo_de_Juego
-FROM Historial_Partida hp
-INNER JOIN Partida pa ON hp.ID_Partida = pa.ID_Partida
-INNER JOIN Registro_Usuario R ON hp.ID_Usuario = r.ID_Usuario
+inner join usuario u on (hp.id_usuario = u.id_usuario)
+where u.Nickname= 'Yolanda73'
 
 ----------------------------------------------------------------------------------
 --� Utilizaci�n efectiva de un cosm�tico: cantidad de usuarios que lo han utilizado en 
