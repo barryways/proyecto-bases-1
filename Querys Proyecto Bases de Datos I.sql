@@ -96,6 +96,7 @@ FROM dbo.Historial_Partida hp
 inner join dbo.Usuario u on (hp.ID_Usuario=u.ID_Usuario)
 WHERE hp.ID_Usuario = 413 AND Partida_Ganada = 1
 GROUP BY hp.ID_Partida, Kills, u.Nickname
+order by Kills desc
 
 
 --------------------------------------------------------------------------------
@@ -265,13 +266,25 @@ ORDER BY kdratio DESC
 --� Tiempo efectivo de juego: cantidad de tiempo en partida / cantidad de tiempo en la 
 --plataforma
 
-SELECT SUM(DATEDIFF(MINUTE, pa.Fecha_Inicio, pa.Fecha_Fin))*10 / 
+SELECT SUM(DATEDIFF(MINUTE, pa.Fecha_Inicio, pa.Fecha_Fin))*100 / 
        SUM(DATEDIFF(MINUTE, R.Tiempo_Inicio, R.Tiempo_Final)) AS Tiempo_Efectivo_de_Juego
 FROM Historial_Partida hp
 INNER JOIN Partida pa ON hp.ID_Partida = pa.ID_Partida
 INNER JOIN Registro_Usuario R ON hp.ID_Usuario = r.ID_Usuario
 
 
+
+select SUM(DATEDIFF(MINUTE, pa.Fecha_Inicio, pa.Fecha_Fin))  from Historial_Partida hp
+INNER JOIN Partida pa ON hp.ID_Partida = pa.ID_Partida
+
+select SUM(DATEDIFF(MINUTE,R.Tiempo_Inicio,R.Tiempo_Final)) from Historial_Partida hp
+inner join Registro_Usuario R on (hp.ID_Usuario = R.ID_Usuario)
+
+SELECT cast(SUM(DATEDIFF(MINUTE, pa.Fecha_Inicio, pa.Fecha_Fin)) as float) / 
+       cast(SUM(DATEDIFF(MINUTE, R.Tiempo_Inicio, R.Tiempo_Final))as float) AS Tiempo_Efectivo_de_Juego
+FROM Historial_Partida hp
+INNER JOIN Partida pa ON hp.ID_Partida = pa.ID_Partida
+INNER JOIN Registro_Usuario R ON hp.ID_Usuario = r.ID_Usuario
 
 ----------------------------------------------------------------------------------
 --� Utilizaci�n efectiva de un cosm�tico: cantidad de usuarios que lo han utilizado en 
